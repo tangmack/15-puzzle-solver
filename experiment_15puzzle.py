@@ -1,9 +1,14 @@
 from collections import deque
+import time
+st = time.time()
 
 def swap(s_, i1, i2):
     m = list(s_)
     m[i1], m[i2] = m[i2], m[i1] # switch letters
     return ''.join(m)  # return as string
+
+# def swap(s, i, j):
+#     return ''.join((s[:i], s[j], s[i+1:j], s[i], s[j+1:]))
 
 # bidirectional translation of letter string to double digit number string
 def translate(str_in):
@@ -59,7 +64,62 @@ def translate(str_in):
 
     return ''.join(new_list)  # return as string
 
+# translate test case (list of lists) into string of letters
+def translate_test_case(LL):
+    LL_str_list = ['0'*( 2 - len(str(x)) ) +str(x) for sublist in LL for x in sublist]
+    return translate( ''.join(LL_str_list) )
 
+
+# Custom data structure to translate from a tuple of position indexes (start, end) ie. (2,3) or (3,2)
+# to respective actions ie. Right or Left
+class DualWayMovesDict():
+    def __init__(self, half_dict):
+        self.dual_moves_dict = {}
+        for idx, (key, value) in enumerate(half_dict.items()):
+            self.dual_moves_dict[key] = value
+
+            i1 = key[0]
+            i2 = key[1]
+
+            self.dual_moves_dict[(i2, i1)] = value
+
+            # if value == 'R':
+            #     self.dual_moves_dict[(i2,i1)] = 'L'
+            # elif value == 'D':
+            #     self.dual_moves_dict[(i2,i1)] = 'U'
+
+
+# declare half of the mappings from tuple of block indexes (start, end) ie. (2,3) or (3,2)
+# to respective actions ie. Right or Left
+# Later we will pass this into a DualWayMovesDict() class and essentially "double" the dictionary
+# since we know left and right, or up and down, are opposite moves to each other.
+numbers_tuple_dict = {(0,1):'R',
+                      (1,2):'R',
+                      (2,3):'R',
+                      (4,5):'R',
+                      (5,6):'R',
+                      (6,7):'R',
+                      (8,9):'R',
+                      (9,10):'R',
+                      (10,11):'R',
+                      (12,13):'R',
+                      (13,14):'R',
+                      (14,15):'R',
+                      (0,4):'D',
+                      (1,5):'D',
+                      (2,6):'D',
+                      (3,7):'D',
+                      (4,8):'D',
+                      (5,9):'D',
+                      (6,10):'D',
+                      (7,11):'D',
+                      (8,12):'D',
+                      (9,13):'D',
+                      (10,14):'D',
+                      (11,15):'D',
+                      }
+
+position_to_actionset_dict = DualWayMovesDict(numbers_tuple_dict)  # "double" the dictionary from positions to actions
 
 # s = "abcdefghijklmnoX" # o is fifteen
 # s = "abcdefghijklmnXo" # o is fifteen
@@ -72,8 +132,16 @@ def translate(str_in):
 # s = translate('123456')
 
 Test_Case_1 = [[1, 2, 3, 4],[ 5, 6, 0, 8], [9, 10, 7, 12] , [13, 14, 11, 15]]
-Test_Case_1_str_list = ['0'*( 2 - len(str(x)) ) +str(x) for sublist in Test_Case_1 for x in sublist]
-s = translate( ''.join(Test_Case_1_str_list) )
+Test_Case_2 = [[1, 0, 3, 4],[ 5, 2, 7, 8], [9, 6, 10, 11] , [13, 14, 15, 12]]
+Test_Case_3 = [[0, 2, 3, 4],[ 1,5, 7, 8], [9, 6, 11, 12] , [13, 10, 14, 15]]
+Test_Case_4 = [[5, 1, 2, 3],[0,6, 7, 4], [9, 10, 11, 8] , [13, 14, 15, 12]]
+Test_Case_5 = [[1, 6, 2, 3], [9,5, 7, 4], [0, 10, 11, 8] , [13, 14, 15, 12]]
+
+# Custom_Test_Case_1 = [[9,2,5,4],[13,11,0,3],[15,1,7,8],[10,6,14,12]]
+s = translate_test_case(Test_Case_5) # start position
+# s = translate_test_case(Custom_Test_Case_1) # start position
+
+solution = 'abcdefghijklmnoX' # desired solved position
 
 q = deque() # queue has O(1) pop time vs list's O(n)
 q.append(s)
@@ -84,13 +152,20 @@ past_set = set() # store all previously checked nodes
 past_set.add(s)
 
 
-one = None
-two = None
-three = None
-four = None
-while(len(q) > 0):
+# Declare resulting state and corresponding action from a move (up to 4 possibilities) as None
+one = None; one_a =  None
+two = None; two_a =  None
+three = None; three_a =  None
+four = None; four_a =  None
 
-    if q[0] == 'abcdefghijklmnoX': # note: maybe consider reading q[0] to memory, since it's used later
+child_parent_dict = {} # keys are children, values are parents
+
+max_length_q = len(q)
+iterations = 0
+while(len(q) > 0):
+# while(iterations < 5000):
+
+    if q[0] == solution: # note: maybe consider reading q[0] to memory, since it's used later
         print("Solved!")
         break
 
@@ -187,15 +262,23 @@ while(len(q) > 0):
     if one is not None and not one in q:
         if not one in past_set:
             q.append(one)
+            child_parent_dict[one] = q[0] # child is key, parent is current node
     if two is not None and not two in q:
         if not two in past_set:
             q.append(two)
+            child_parent_dict[two] = q[0]
     if three is  not None and not three in q:
         if not three in past_set:
             q.append(three)
+            child_parent_dict[three] = q[0]
     if four is not None and not four in q:
         if not four in past_set:
             q.append(four)
+            child_parent_dict[four] = q[0]
+            
+    current_length_q = len(q)
+    if current_length_q >= max_length_q:
+        max_length_q = current_length_q
 
 
     # add to checked list (or set, in this case)
@@ -203,7 +286,38 @@ while(len(q) > 0):
     q.popleft() # remove first element of queue (as we have checked that)
 
 
-    q
-    print(q)
+    # q
+    # print(q)
+    # print( str(iterations) + "----%.2f----" % (time.time() - st))
+    iterations += 1
 
 print(past_set)
+print(iterations)
+
+soln_list = []
+current_node = q[0]
+# Build back up node solution path (from goal to start)
+while(1):
+    if current_node == s:
+        soln_list.append(current_node)
+        break
+
+    soln_list.append(current_node)
+    parent_node = child_parent_dict[current_node]
+    current_node = parent_node
+
+soln_list.reverse() # reverse (to get start to goal)
+
+action_list = []
+# Build back up action set list
+for node in soln_list: # ignore first element (start pos) since it has no parent node
+    p1 = node.find('X')
+    try:
+        p2 = child_parent_dict[node].find('X')
+        action_list.append( position_to_actionset_dict.dual_moves_dict[(p1,p2)] )
+    except:
+        action_list.append('SSS')
+
+print("length of set: ", len(past_set))
+print(max_length_q)
+pass
