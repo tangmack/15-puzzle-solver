@@ -61,15 +61,19 @@ def translate(str_in):
 
 
 
-# s = "abcdefghijklmnoX" # p is fifteen
-# s = "abcdefghijklmnXo" # p is fifteen
-# s = "Xabcdefghijklmno" # p is fifteen
-# s = "abcdeXfghijklmno" # p is fifteen
+# s = "abcdefghijklmnoX" # o is fifteen
+# s = "abcdefghijklmnXo" # o is fifteen
+# s = "Xabcdefghijklmno" # o is fifteen
+# s = "abcdeXfghijklmno" # o is fifteen
 
 # s = translate('01 02 03 04 05 06 08 14 09 11 07 00 13 10 15 12')
 # s = translate('01 02 03 04 05 06 07 08 09 10 11 12 13 00 14 15')
-s = translate('01 02 03 04 05 06 07 08 09 10 11 12 13 00 14 15')
+# s = translate('01 02 03 04 05 06 07 08 09 10 11 12 13 00 14 15')
 # s = translate('123456')
+
+Test_Case_1 = [[1, 2, 3, 4],[ 5, 6, 0, 8], [9, 10, 7, 12] , [13, 14, 11, 15]]
+Test_Case_1_str_list = ['0'*( 2 - len(str(x)) ) +str(x) for sublist in Test_Case_1 for x in sublist]
+s = translate( ''.join(Test_Case_1_str_list) )
 
 q = deque() # queue has O(1) pop time vs list's O(n)
 q.append(s)
