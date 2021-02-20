@@ -67,6 +67,15 @@ class Solver:
         LL_str_list = ['0' * (2 - len(str(x))) + str(x) for sublist in LL for x in sublist]
         return self.translate(''.join(LL_str_list))
 
+    # translate string of letters ie. '010203040506708' to list of lists ie. [[1,2,3,4],[5,6,7,8]]
+    def translate_string_numbers_to_test_case(self, str):
+        n = 2
+        L = [int(str[i:i+n]) for i in range(0, len(str), n)]
+
+        LL = [L[i:i + 4] for i in range(0, len(L), 4)]
+        return LL
+
+
     # Custom data structure to translate from a tuple of position indexes (start, end) ie. (2,3) or (3,2)
     # to respective actions ie. Right or Left
     class DualWayMovesDict():
@@ -91,7 +100,7 @@ class Solver:
 
 
 
-    def solve(self):
+    def solve(self, Test_Case_N, Test_Case_Str):
         # declare half of the mappings from tuple of block indexes (start, end) ie. (2,3) or (3,2)
         # to respective actions ie. Right or Left
         # Later we will pass this into a DualWayMovesDict() class and essentially "double" the dictionary
@@ -134,15 +143,15 @@ class Solver:
         # s = translate('01 02 03 04 05 06 07 08 09 10 11 12 13 00 14 15')
         # s = translate('123456')
 
-        Test_Case_1 = [[1, 2, 3, 4],[ 5, 6, 0, 8], [9, 10, 7, 12] , [13, 14, 11, 15]]
-        Test_Case_2 = [[1, 0, 3, 4],[ 5, 2, 7, 8], [9, 6, 10, 11] , [13, 14, 15, 12]]
-        Test_Case_3 = [[0, 2, 3, 4],[ 1,5, 7, 8], [9, 6, 11, 12] , [13, 10, 14, 15]]
-        Test_Case_4 = [[5, 1, 2, 3],[0,6, 7, 4], [9, 10, 11, 8] , [13, 14, 15, 12]]
-        Test_Case_5 = [[1, 6, 2, 3], [9,5, 7, 4], [0, 10, 11, 8] , [13, 14, 15, 12]]
+        # Test_Case_1 = [[1, 2, 3, 4],[ 5, 6, 0, 8], [9, 10, 7, 12] , [13, 14, 11, 15]]
+        # Test_Case_2 = [[1, 0, 3, 4],[ 5, 2, 7, 8], [9, 6, 10, 11] , [13, 14, 15, 12]]
+        # Test_Case_3 = [[0, 2, 3, 4],[ 1,5, 7, 8], [9, 6, 11, 12] , [13, 10, 14, 15]]
+        # Test_Case_4 = [[5, 1, 2, 3],[0,6, 7, 4], [9, 10, 11, 8] , [13, 14, 15, 12]]
+        # Test_Case_5 = [[1, 6, 2, 3], [9,5, 7, 4], [0, 10, 11, 8] , [13, 14, 15, 12]]
 
         # Custom_Test_Case_1 = [[9,2,5,4],[13,11,0,3],[15,1,7,8],[10,6,14,12]]
         # Custom_Test_Case_2 = [[1,2,7,3],[11,6,8,0],[9,13,12,5],[14,15,4,10]]
-        s = self.translate_test_case(Test_Case_5) # start position
+        s = self.translate_test_case(Test_Case_N) # start position
         # s = self.translate_test_case(Custom_Test_Case_1) # start position
 
         solution = 'abcdefghijklmnoX' # desired solved position
@@ -332,6 +341,36 @@ class Solver:
         print(max_length_q)
         pass
 
+        ####### Send to text file ###########################
+        soln_list_numbers = []
+        for element in soln_list:
+            soln_list_numbers.append(self.translate_string_numbers_to_test_case(self.translate(element)))
+
+        # Save lists to file
+        the_filename = Test_Case_Str + '.txt'
+        with open(the_filename, 'w') as f:
+            for s in soln_list_numbers:
+                for e in s:
+                    print(', '.join(map(str, e)))
+                    f.write(', '.join(map(str, e)) + '\n')
+
+                f.write('\n')
+                print("\n")
+
+
+
+
 if __name__ == '__main__':
     solver_object = Solver()
-    solver_object.solve()
+
+    Test_Case_1 = [[1, 2, 3, 4], [5, 6, 0, 8], [9, 10, 7, 12], [13, 14, 11, 15]]
+    Test_Case_2 = [[1, 0, 3, 4], [5, 2, 7, 8], [9, 6, 10, 11], [13, 14, 15, 12]]
+    Test_Case_3 = [[0, 2, 3, 4], [1, 5, 7, 8], [9, 6, 11, 12], [13, 10, 14, 15]]
+    Test_Case_4 = [[5, 1, 2, 3], [0, 6, 7, 4], [9, 10, 11, 8], [13, 14, 15, 12]]
+    Test_Case_5 = [[1, 6, 2, 3], [9, 5, 7, 4], [0, 10, 11, 8], [13, 14, 15, 12]]
+
+    solver_object.solve(Test_Case_1, "Test_Case_1")
+    solver_object.solve(Test_Case_2, "Test_Case_2")
+    solver_object.solve(Test_Case_3, "Test_Case_3")
+    solver_object.solve(Test_Case_4, "Test_Case_4")
+    solver_object.solve(Test_Case_5, "Test_Case_5")
