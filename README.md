@@ -11,3 +11,7 @@ Choose or create test cases at bottom of experiment_15puzzle.py, for example: Te
 Call solve method, for example: solver_object.solve(Test_Case_1, "Test_Case_1")
 (by default 5 test cases will run)
 Run experiment_15puzzle.py file to write shortest path solution to .txt file, and print action set list.
+
+Python libraries used:
+collections
+time
