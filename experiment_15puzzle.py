@@ -324,7 +324,6 @@ class Solver:
         # action_list.reverse() # reverse (to get start to goal)
 
         print(action_list)
-        pass
 
         ####### Send to text file ###########################
         soln_list_numbers = []
