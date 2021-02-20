@@ -1,3 +1,10 @@
+# Mack Tang
+# 15-Puzzle Solver
+# A Solver that uses set (hash table) and deque (queue) data structures to run quickly
+# Instructions to run:
+# Put test cases at bottom of this file (by default 5 test cases will run)
+# Run this file to write solutions to .txt file, and print action set list.
+
 from collections import deque
 import time
 st = time.time()
