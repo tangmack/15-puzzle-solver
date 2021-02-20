@@ -357,4 +357,4 @@ if __name__ == '__main__':
     solver_object.solve(Test_Case_2, "Test_Case_2")
     solver_object.solve(Test_Case_3, "Test_Case_3")
     solver_object.solve(Test_Case_4, "Test_Case_4")
-    solver_object.solve(Test_Case_5, "nodePath.txt")
+    solver_object.solve(Test_Case_5, "nodePath")
