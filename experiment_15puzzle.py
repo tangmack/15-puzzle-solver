@@ -78,7 +78,7 @@ class Solver:
 
     # Custom data structure to translate from a tuple of position indexes (start, end) ie. (2,3) or (3,2)
     # to respective actions ie. Right or Left
-    class DualWayMovesDict():
+    class DualWayMovesDict:
         def __init__(self, half_dict):
             self.dual_moves_dict = {}
             for idx, (key, value) in enumerate(half_dict.items()):
@@ -87,12 +87,12 @@ class Solver:
                 i1 = key[0]
                 i2 = key[1]
 
-                self.dual_moves_dict[(i2, i1)] = value
+                # self.dual_moves_dict[(i2, i1)] = value
 
-                # if value == 'R':
-                #     self.dual_moves_dict[(i2,i1)] = 'L'
-                # elif value == 'D':
-                #     self.dual_moves_dict[(i2,i1)] = 'U'
+                if value == 'R':
+                    self.dual_moves_dict[(i2,i1)] = 'L'
+                elif value == 'D':
+                    self.dual_moves_dict[(i2,i1)] = 'U'
 
 
 
@@ -159,7 +159,7 @@ class Solver:
         q = deque() # queue has O(1) pop time vs list's O(n)
         q.append(s)
 
-        print(q)
+        # print(q)
 
         past_set = set() # store all previously checked nodes
         past_set.add(s)
@@ -310,8 +310,8 @@ class Solver:
             # print( str(iterations) + "----%.2f----" % (time.time() - st))
             iterations += 1
 
-        print(past_set)
-        print(iterations)
+        # print(past_set)
+        # print(iterations)
 
         soln_list = []
         current_node = q[0]
@@ -325,20 +325,25 @@ class Solver:
             parent_node = child_parent_dict[current_node]
             current_node = parent_node
 
+        # print(soln_list)
         soln_list.reverse() # reverse (to get start to goal)
+        # print(soln_list)
 
         action_list = []
         # Build back up action set list
         for node in soln_list: # ignore first element (start pos) since it has no parent node
             p1 = node.find('X')
             try:
-                p2 = child_parent_dict[node].find('X')
-                action_list.append( position_to_actionset_dict.dual_moves_dict[(p1,p2)] )
+                p2 = child_parent_dict[node].find('X') # child is key, parent is current node
+                action_list.append( position_to_actionset_dict.dual_moves_dict[(p2,p1)] )
             except:
-                action_list.append('SSS')
+                action_list.append('START')
 
-        print("length of set: ", len(past_set))
-        print(max_length_q)
+        # action_list.reverse() # reverse (to get start to goal)
+
+        print(action_list)
+        # print("length of set: ", len(past_set))
+        # print(max_length_q)
         pass
 
         ####### Send to text file ###########################
@@ -351,11 +356,11 @@ class Solver:
         with open(the_filename, 'w') as f:
             for s in soln_list_numbers:
                 for e in s:
-                    print(', '.join(map(str, e)))
-                    f.write(', '.join(map(str, e)) + '\n')
+                    # print(', '.join(map(str, e)))
+                    f.write(',  '.join(map(str, e)) + '\n')
 
                 f.write('\n')
-                print("\n")
+                # print("\n")
 
 
 
