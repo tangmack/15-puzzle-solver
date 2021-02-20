@@ -141,8 +141,9 @@ class Solver:
         Test_Case_5 = [[1, 6, 2, 3], [9,5, 7, 4], [0, 10, 11, 8] , [13, 14, 15, 12]]
 
         # Custom_Test_Case_1 = [[9,2,5,4],[13,11,0,3],[15,1,7,8],[10,6,14,12]]
+        # Custom_Test_Case_2 = [[1,2,7,3],[11,6,8,0],[9,13,12,5],[14,15,4,10]]
         s = self.translate_test_case(Test_Case_5) # start position
-        # s = translate_test_case(Custom_Test_Case_1) # start position
+        # s = self.translate_test_case(Custom_Test_Case_1) # start position
 
         solution = 'abcdefghijklmnoX' # desired solved position
 
@@ -156,10 +157,10 @@ class Solver:
 
 
         # Declare resulting state and corresponding action from a move (up to 4 possibilities) as None
-        one = None; one_a =  None
-        two = None; two_a =  None
-        three = None; three_a =  None
-        four = None; four_a =  None
+        one = False
+        two = False
+        three = False
+        four = False
 
         child_parent_dict = {} # keys are children, values are parents
 
@@ -168,120 +169,122 @@ class Solver:
         while(len(q) > 0):
         # while(iterations < 5000):
 
-            if q[0] == solution: # note: maybe consider reading q[0] to memory, since it's used later
+            node = q[0] # current node
+
+            if node == solution:
                 print("Solved!")
                 break
 
             # locate index of "0"
-            b = q[0].find('X') # blank index
+            b = node.find('X') # blank index
 
 
             if b == 0:
-                one = self.swap(q[0], 0, 1)
-                two = self.swap(q[0], 0, 4)
-                three = None
-                four = None
+                one = self.swap(node, 0, 1)
+                two = self.swap(node, 0, 4)
+                three = False
+                four = False
             elif b == 1:
-                one = self.swap(q[0], 1, 0)
-                two = self.swap(q[0], 1, 2)
-                three = self.swap(q[0], 1, 5)
-                four = None
+                one = self.swap(node, 1, 0)
+                two = self.swap(node, 1, 2)
+                three = self.swap(node, 1, 5)
+                four = False
             elif b == 2:
-                one = self.swap(q[0], 2, 1)
-                two = self.swap(q[0], 2, 3)
-                three = self.swap(q[0], 2, 6)
-                four = None
+                one = self.swap(node, 2, 1)
+                two = self.swap(node, 2, 3)
+                three = self.swap(node, 2, 6)
+                four = False
             elif b == 3:
-                one = self.swap(q[0], 3, 2)
-                two = self.swap(q[0], 3, 7)
-                three = None
-                four = None
+                one = self.swap(node, 3, 2)
+                two = self.swap(node, 3, 7)
+                three = False
+                four = False
             elif b == 4:
-                one = self.swap(q[0], 4, 0)
-                two = self.swap(q[0], 4, 5)
-                three = self.swap(q[0], 4, 8)
-                four = None
+                one = self.swap(node, 4, 0)
+                two = self.swap(node, 4, 5)
+                three = self.swap(node, 4, 8)
+                four = False
             elif b == 5:
-                one = self.swap(q[0], 5, 1)
-                two = self.swap(q[0], 5, 4)
-                three = self.swap(q[0], 5, 6)
-                four = self.swap(q[0], 5, 9)
+                one = self.swap(node, 5, 1)
+                two = self.swap(node, 5, 4)
+                three = self.swap(node, 5, 6)
+                four = self.swap(node, 5, 9)
             elif b == 6:
-                one = self.swap(q[0], 6, 2)
-                two = self.swap(q[0], 6, 5)
-                three = self.swap(q[0], 6, 7)
-                four = self.swap(q[0], 6, 10)
+                one = self.swap(node, 6, 2)
+                two = self.swap(node, 6, 5)
+                three = self.swap(node, 6, 7)
+                four = self.swap(node, 6, 10)
             elif b == 7:
-                one = self.swap(q[0], 7, 3)
-                two = self.swap(q[0], 7, 6)
-                three = self.swap(q[0], 7, 11)
-                four = None
+                one = self.swap(node, 7, 3)
+                two = self.swap(node, 7, 6)
+                three = self.swap(node, 7, 11)
+                four = False
             elif b == 8:
-                one = self.swap(q[0], 8, 4)
-                two = self.swap(q[0], 8, 9)
-                three = self.swap(q[0], 8, 12)
-                four = None
+                one = self.swap(node, 8, 4)
+                two = self.swap(node, 8, 9)
+                three = self.swap(node, 8, 12)
+                four = False
             elif b == 9:
-                one = self.swap(q[0], 9, 5)
-                two = self.swap(q[0], 9, 8)
-                three = self.swap(q[0], 9, 10)
-                four = self.swap(q[0], 9, 13)
+                one = self.swap(node, 9, 5)
+                two = self.swap(node, 9, 8)
+                three = self.swap(node, 9, 10)
+                four = self.swap(node, 9, 13)
             elif b == 10:
-                one = self.swap(q[0], 10, 6)
-                two = self.swap(q[0], 10, 9)
-                three = self.swap(q[0], 10, 11)
-                four = self.swap(q[0], 10, 14)
+                one = self.swap(node, 10, 6)
+                two = self.swap(node, 10, 9)
+                three = self.swap(node, 10, 11)
+                four = self.swap(node, 10, 14)
             elif b == 11:
-                one = self.swap(q[0], 11, 7)
-                two = self.swap(q[0], 11, 10)
-                three = self.swap(q[0], 11, 15)
-                four = None
+                one = self.swap(node, 11, 7)
+                two = self.swap(node, 11, 10)
+                three = self.swap(node, 11, 15)
+                four = False
             elif b == 12:
-                one = self.swap(q[0], 12, 8)
-                two = self.swap(q[0], 12, 13)
-                three = None
-                four = None
+                one = self.swap(node, 12, 8)
+                two = self.swap(node, 12, 13)
+                three = False
+                four = False
             elif b == 13:
-                one = self.swap(q[0], 13, 9)
-                two = self.swap(q[0], 13, 12)
-                three = self.swap(q[0], 13, 14)
-                four = None
+                one = self.swap(node, 13, 9)
+                two = self.swap(node, 13, 12)
+                three = self.swap(node, 13, 14)
+                four = False
             elif b == 14:
-                one = self.swap(q[0], 14, 10)
-                two = self.swap(q[0], 14, 13)
-                three = self.swap(q[0], 14, 15)
-                four = None
+                one = self.swap(node, 14, 10)
+                two = self.swap(node, 14, 13)
+                three = self.swap(node, 14, 15)
+                four = False
             elif b == 15:
-                one = self.swap(q[0], 15, 11)
-                two = self.swap(q[0], 15, 14)
-                three = None
-                four = None
+                one = self.swap(node, 15, 11)
+                two = self.swap(node, 15, 14)
+                three = False
+                four = False
             else:
-                one = None
-                two = None
-                three = None
-                four = None
+                one = False
+                two = False
+                three = False
+                four = False
 
-            if one is not None:
+            if one is not False:
                 if not one in past_set:
                         q.append(one)
                         past_set.add(one)
-                        child_parent_dict[one] = q[0] # child is key, parent is current node
-            if two is not None:
+                        child_parent_dict[one] = node # child is key, parent is current node
+            if two is not False:
                 if not two in past_set:
                         q.append(two)
                         past_set.add(two)
-                        child_parent_dict[two] = q[0]
-            if three is  not None:
+                        child_parent_dict[two] = node
+            if three is not False:
                 if not three in past_set:
                         q.append(three)
                         past_set.add(three)
-                        child_parent_dict[three] = q[0]
-            if four is not None:
+                        child_parent_dict[three] = node
+            if four is not False:
                 if not four in past_set:
                         q.append(four)
                         past_set.add(four)
-                        child_parent_dict[four] = q[0]
+                        child_parent_dict[four] = node
 
             current_length_q = len(q)
             if current_length_q >= max_length_q:
@@ -289,7 +292,7 @@ class Solver:
 
 
             # add to checked list (or set, in this case)
-            past_set.add(q[0])
+            past_set.add(node)
             q.popleft() # remove first element of queue (as we have checked that)
 
 
