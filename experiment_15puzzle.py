@@ -264,23 +264,23 @@ class Solver:
 
             if one is not None:
                 if not one in past_set:
-                    if not one in q:
                         q.append(one)
+                        past_set.add(one)
                         child_parent_dict[one] = q[0] # child is key, parent is current node
             if two is not None:
                 if not two in past_set:
-                    if not two in q:
                         q.append(two)
+                        past_set.add(two)
                         child_parent_dict[two] = q[0]
             if three is  not None:
                 if not three in past_set:
-                    if not three in q:
                         q.append(three)
+                        past_set.add(three)
                         child_parent_dict[three] = q[0]
             if four is not None:
                 if not four in past_set:
-                    if not four in q:
                         q.append(four)
+                        past_set.add(four)
                         child_parent_dict[four] = q[0]
 
             current_length_q = len(q)
