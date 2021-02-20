@@ -10,6 +10,7 @@ import time
 st = time.time()
 
 class Solver:
+    # switch two letters in a string
     def swap(self, s_, i1, i2):
         m = list(s_)
         m[i1], m[i2] = m[i2], m[i1]  # switch letters
@@ -105,8 +106,7 @@ class Solver:
 
 
 
-
-
+    # The main solver class, takes as input a test case (list of lists) and name of test case (string)
     def solve(self, Test_Case_N, Test_Case_Str):
         # declare half of the mappings from tuple of block indexes (start, end) ie. (2,3) or (3,2)
         # to respective actions ie. Right or Left
@@ -140,21 +140,6 @@ class Solver:
 
         position_to_actionset_dict = self.DualWayMovesDict(numbers_tuple_dict)  # "double" the dictionary from positions to actions
 
-        # s = "abcdefghijklmnoX" # o is fifteen
-        # s = "abcdefghijklmnXo" # o is fifteen
-        # s = "Xabcdefghijklmno" # o is fifteen
-        # s = "abcdeXfghijklmno" # o is fifteen
-
-        # s = translate('01 02 03 04 05 06 08 14 09 11 07 00 13 10 15 12')
-        # s = translate('01 02 03 04 05 06 07 08 09 10 11 12 13 00 14 15')
-        # s = translate('01 02 03 04 05 06 07 08 09 10 11 12 13 00 14 15')
-        # s = translate('123456')
-
-        # Test_Case_1 = [[1, 2, 3, 4],[ 5, 6, 0, 8], [9, 10, 7, 12] , [13, 14, 11, 15]]
-        # Test_Case_2 = [[1, 0, 3, 4],[ 5, 2, 7, 8], [9, 6, 10, 11] , [13, 14, 15, 12]]
-        # Test_Case_3 = [[0, 2, 3, 4],[ 1,5, 7, 8], [9, 6, 11, 12] , [13, 10, 14, 15]]
-        # Test_Case_4 = [[5, 1, 2, 3],[0,6, 7, 4], [9, 10, 11, 8] , [13, 14, 15, 12]]
-        # Test_Case_5 = [[1, 6, 2, 3], [9,5, 7, 4], [0, 10, 11, 8] , [13, 14, 15, 12]]
 
         # Custom_Test_Case_1 = [[9,2,5,4],[13,11,0,3],[15,1,7,8],[10,6,14,12]]
         # Custom_Test_Case_2 = [[1,2,7,3],[11,6,8,0],[9,13,12,5],[14,15,4,10]]
@@ -165,8 +150,6 @@ class Solver:
 
         q = deque() # queue has O(1) pop time vs list's O(n)
         q.append(s)
-
-        # print(q)
 
         past_set = set() # store all previously checked nodes
         past_set.add(s)
@@ -180,7 +163,6 @@ class Solver:
 
         child_parent_dict = {} # keys are children, values are parents
 
-        max_length_q = len(q)
         iterations = 0
         while(len(q) > 0):
         # while(iterations < 5000):
@@ -194,12 +176,12 @@ class Solver:
             # locate index of "0"
             b = node.find('X') # blank index
 
-
-            if b == 0:
-                one = self.swap(node, 0, 1)
-                two = self.swap(node, 0, 4)
-                three = False
-                four = False
+            # Choose available moves (do not run into walls)
+            if b == 0: # if blank tile index is 0
+                one = self.swap(node, 0, 1) # first possible move swaps position index 0 and 1
+                two = self.swap(node, 0, 4) # second possible move swaps position index 0 and 4
+                three = False # no third move possible for this situation
+                four = False # no third move possible for this situation
             elif b == 1:
                 one = self.swap(node, 1, 0)
                 two = self.swap(node, 1, 2)
@@ -281,6 +263,7 @@ class Solver:
                 three = False
                 four = False
 
+            # Add new nodes to queue, and explored nodes set
             if one is not False:
                 if not one in past_set:
                         q.append(one)
@@ -302,19 +285,12 @@ class Solver:
                         past_set.add(four)
                         child_parent_dict[four] = node
 
-            current_length_q = len(q)
-            if current_length_q >= max_length_q:
-                max_length_q = current_length_q
 
 
             # add to checked list (or set, in this case)
             past_set.add(node)
             q.popleft() # remove first element of queue (as we have checked that)
 
-
-            # q
-            # print(q)
-            # print( str(iterations) + "----%.2f----" % (time.time() - st))
             iterations += 1
 
         # print(past_set)
@@ -334,7 +310,6 @@ class Solver:
 
         # print(soln_list)
         soln_list.reverse() # reverse (to get start to goal)
-        # print(soln_list)
 
         action_list = []
         # Build back up action set list
@@ -349,8 +324,6 @@ class Solver:
         # action_list.reverse() # reverse (to get start to goal)
 
         print(action_list)
-        # print("length of set: ", len(past_set))
-        # print(max_length_q)
         pass
 
         ####### Send to text file ###########################
@@ -385,4 +358,4 @@ if __name__ == '__main__':
     solver_object.solve(Test_Case_2, "Test_Case_2")
     solver_object.solve(Test_Case_3, "Test_Case_3")
     solver_object.solve(Test_Case_4, "Test_Case_4")
-    solver_object.solve(Test_Case_5, "Test_Case_5")
+    solver_object.solve(Test_Case_5, "nodePath.txt")
